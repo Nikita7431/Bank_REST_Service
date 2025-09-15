@@ -1,0 +1,33 @@
+- changeSet:
+    id: card_id_1
+    author: Yudin
+    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+    changes:
+      - createTable:
+          columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: pk_card
+                name: id
+                type: INT
+            - column:
+                constraints:
+                  nullable: false
+                name: number
+                type: VARCHAR(255)
+            - column:
+                name: user_id
+                type: INT
+            - column:
+                name: end_date
+                type: DATE
+            - column:
+                name: status_card_id
+                type: INT
+            - column:
+                name: balance
+                type: DOUBLE
+          tableName: card

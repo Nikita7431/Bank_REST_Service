@@ -1,0 +1,29 @@
+- changeSet:
+    id: token_id_1
+    author: Yudin
+    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+    changes:
+      - createTable:
+          columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: pk_token
+                name: id
+                type: INT
+            - column:
+                name: token
+                type: VARCHAR(255)
+          tableName: token
+
+- changeSet:
+    id: token_id_1_1
+    author: Yudin
+    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+    changes:
+      - addUniqueConstraint:
+          columnNames: token
+          constraintName: uc_token_token
+          tableName: token

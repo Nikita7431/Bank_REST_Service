@@ -1,0 +1,38 @@
+- changeSet:
+    id: user_id_1
+    author: Yudin
+    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+    changes:
+      - createTable:
+          columns:
+            - column:
+                autoIncrement: true
+                constraints:
+                  nullable: false
+                  primaryKey: true
+                  primaryKeyName: pk_user
+                name: id
+                type: INT
+            - column:
+                name: name
+                type: VARCHAR(255)
+            - column:
+                name: login
+                type: VARCHAR(255)
+            - column:
+                name: password
+                type: VARCHAR(255)
+            - column:
+                name: role_id
+                type: INT
+          tableName: user
+
+- changeSet:
+    id: user_id_1_1
+    author: Yudin
+    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+    changes:
+      - addUniqueConstraint:
+          columnNames: login
+          constraintName: uc_user_login
+          tableName: user
