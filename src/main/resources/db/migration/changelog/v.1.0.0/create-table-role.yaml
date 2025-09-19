@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1757887772406-2
+      author: Ноут
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: role
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_role
+                  name: id
+                  type: INT
+              - column:
+                  name: role
+                  type: VARCHAR(255)

@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-statuses
+      author: Ноут
+      preConditions:
+        onFail: CONTINUE
+        tableIsEmpty:
+          tableName: status_card
+      changes:
+        - insert:
+            tableName: status_card
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: status
+                  value: ACTIVE
+        - insert:
+            tableName: status_card
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: status
+                  value: BLOCKED
+        - insert:
+            tableName: status_card
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: status
+                  value: EXPIRED

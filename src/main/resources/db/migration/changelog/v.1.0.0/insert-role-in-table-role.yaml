@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-roles
+      author: Ноут
+      preConditions:
+        onFail: MARK_RAN
+        tableIsEmpty:
+            tableName: role
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: role
+                  value: USER
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: role
+                  value: ADMIN

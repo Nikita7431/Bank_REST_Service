@@ -1,12 +1,15 @@
 package com.example.bankcards.service;
 
+import com.example.bankcards.dto.response.UserDtoResp;
 import com.example.bankcards.entity.Role;
 import com.example.bankcards.entity.User;
 import com.example.bankcards.repository.PeopleRepository;
+import com.example.bankcards.repository.RoleRepository;
 import com.example.bankcards.security.PersonDetails;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,12 +26,18 @@ class UserServiceImplTest {
     private PeopleRepository peopleRepository;
     private PasswordEncoder passwordEncoder;
     private UserServiceImpl userService;
+    private ModelMapper modelMapper;
+    private RoleService roleUserService;
+
+    public UserServiceImplTest(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     @BeforeEach
     void beforeEachMethod() {
         peopleRepository = mock(PeopleRepository.class);
         passwordEncoder = mock(PasswordEncoder.class);
-        userService = new UserServiceImpl(peopleRepository, passwordEncoder);
+        userService = new UserServiceImpl(peopleRepository, roleUserService,passwordEncoder,modelMapper);
     }
 
     @Test
@@ -94,12 +103,12 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findAll_ReturnUsersList() {
+    void findAll_ReturnUserDtoListList() {
         List<User> users = List.of(new User(), new User());
 
         when(peopleRepository.findAll()).thenReturn(users);
 
-        List<User> result = userService.findAll();
+        List<UserDtoResp> result = userService.findAll();
         assertEquals(2, result.size());
         verify(peopleRepository).findAll();
     }

@@ -1,29 +1,40 @@
-- changeSet:
-    id: token_id_1
-    author: Yudin
-    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
-    changes:
-      - createTable:
-          columns:
-            - column:
-                autoIncrement: true
-                constraints:
-                  nullable: false
-                  primaryKey: true
-                  primaryKeyName: pk_token
-                name: id
-                type: INT
-            - column:
-                name: token
-                type: VARCHAR(255)
-          tableName: token
+databaseChangeLog:
+  - changeSet:
+      id: 1757887772406-4
+      author: Ноут
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          tableExists:
+            tableName: token
+      changes:
+        - createTable:
+            tableName: token
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_token
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: token
+                  type: VARCHAR(255)
 
-- changeSet:
-    id: token_id_1_1
-    author: Yudin
-    objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
-    changes:
-      - addUniqueConstraint:
-          columnNames: token
-          constraintName: uc_token_token
-          tableName: token
+  - changeSet:
+      id: 1757887772406-6
+      author: Ноут
+      preConditions:
+        onFail: MARK_RAN
+        not:
+          uniqueConstraintExists:
+            tableName: token
+            constraintName: uc_token_token
+      changes:
+        - addUniqueConstraint:
+            columnNames: token
+            constraintName: uc_token_token
+            tableName: token

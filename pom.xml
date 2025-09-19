@@ -103,6 +103,10 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.8.9</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
     </dependencies>
 
@@ -112,7 +116,22 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.0</version>
+                <configuration>
+                    <source>23</source>
+                    <links>
+                        <link>https://docs.oracle.com/en/java/javase/23/docs/api/</link>
+                        <link>https://javadoc.io/doc/jakarta.validation/jakarta.validation-api/latest/</link>
+                        <link>https://docs.spring.io/spring-framework/docs/6.2.7/javadoc-api/</link>
+                        <link>https://docs.spring.io/spring-security/site/docs/6.5.0/api/</link>
+                       </links>
+                </configuration>
+            </plugin>
         </plugins>
+
     </build>
 
 </project>

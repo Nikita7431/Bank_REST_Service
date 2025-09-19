@@ -1,13 +1,17 @@
 databaseChangeLog:
   - include:
-      file: db/migration/changelog/v.1.0.0/create-table-card.yaml
-  - include:
       file: db/migration/changelog/v.1.0.0/create-table-status-card.yaml
   - include:
+      file: db/migration/changelog/v.1.0.0/create-table-card.yaml
+  - include:
       file: db/migration/changelog/v.1.0.0/create-table-token.yaml
+  - include:
+      file: db/migration/changelog/v.1.0.0/create-table-role.yaml
   - include:
       file: db/migration/changelog/v.1.0.0/create-table-user.yaml
   - include:
       file: db/migration/changelog/v.1.0.0/create-foreign-key-constraint.yaml
   - include:
-      file: db/migration/changelog/15-01-changelog.yaml
+      file: db/migration/changelog/v.1.0.0/insert-role-in-table-role.yaml
+  - include:
+      file: db/migration/changelog/v.1.0.0/insert-status-card-in-table-status-card.yaml

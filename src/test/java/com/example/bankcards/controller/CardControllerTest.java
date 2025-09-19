@@ -37,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class CardControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
     @MockitoBean
     private CardService cardService;
@@ -46,7 +45,9 @@ class CardControllerTest {
     @MockitoBean
     private JWTFilter jwtFilter;
 
-
+    public CardControllerTest(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
     @Test
      void getCards_ReturnPageUserCards() throws Exception {
         Page<CardDtoResp> page = new PageImpl<>(

@@ -1,6 +1,8 @@
 package com.example.bankcards.service;
 
 import com.example.bankcards.dto.request.UserDtoReque;
+import com.example.bankcards.dto.request.UserLoginDtoReque;
+import com.example.bankcards.dto.response.PublicKeyResp;
 import com.example.bankcards.dto.response.ResponseTokens;
 import com.example.bankcards.entity.Token;
 import com.example.bankcards.entity.User;
@@ -42,11 +44,13 @@ class RegistrationServiceTest {
     private RegistrationService registrationService;
 
     private UserDtoReque userDto;
+    private UserLoginDtoReque userLoginDto;
     private ResponseTokens tokens;
 
     @BeforeEach
     void beforeEachMethod() {
-        userDto = new UserDtoReque("login" , "password");
+        userDto = new UserDtoReque("login" , "password", "NamerNameNamovich");
+        userLoginDto = new UserLoginDtoReque("login" , "password");
         tokens = new ResponseTokens("accessToken", "refreshToken");
     }
 
@@ -77,9 +81,9 @@ class RegistrationServiceTest {
     @Test
     void login_User_ReturnTokens() throws Exception {
         when(userService.existsUser("login", "password")).thenReturn(true);
-        when(jwtService.generateTokens(userDto)).thenReturn(tokens);
+        when(jwtService.generateTokens(userLoginDto)).thenReturn(tokens);
 
-        ResponseTokens result = registrationService.login(userDto);
+        ResponseTokens result = registrationService.login(userLoginDto);
 
         assertEquals(tokens, result);
     }
@@ -88,7 +92,7 @@ class RegistrationServiceTest {
     void login_User_Invalid_IllegalArgumentException() {
         when(userService.existsUser("login", "password")).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class, () -> registrationService.login(userDto));
+        assertThrows(IllegalArgumentException.class, () -> registrationService.login(userLoginDto));
     }
 
     @Test
@@ -99,15 +103,15 @@ class RegistrationServiceTest {
     @Test
     void loginByRefresh_Token_ReturnTokens() throws Exception{
         String refresh = "refreshToken";
-        UserDtoReque userDtoReque = new UserDtoReque("login", "password");
+        UserLoginDtoReque userLoginDto = new UserLoginDtoReque("login", "password");
 
         Token tokenEntity = new Token();
         tokenEntity.setToken(refresh);
 
-        when(jwtService.validateTokenAndSyncClaim(refresh)).thenReturn(userDtoReque);
+        when(jwtService.validateTokenAndSyncClaim(refresh)).thenReturn(userLoginDto);
         when(tokenRepository.findByToken(refresh)).thenReturn(Optional.of(tokenEntity));
         when(userService.existsUser("login", "password")).thenReturn(true);
-        when(jwtService.generateTokens(userDtoReque)).thenReturn(tokens);
+        when(jwtService.generateTokens(userLoginDto)).thenReturn(tokens);
 
         ResponseTokens result = registrationService.loginByRefresh(refresh);
 
@@ -122,7 +126,7 @@ class RegistrationServiceTest {
 
     @Test
     void loginByRefresh_Token_NotFound_IllegalArgumentException() {
-        when(jwtService.validateTokenAndSyncClaim("refresh")).thenReturn(userDto);
+        when(jwtService.validateTokenAndSyncClaim("refresh")).thenReturn(userLoginDto);
         when(tokenRepository.findByToken("refresh")).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> registrationService.loginByRefresh("refresh"));
@@ -153,12 +157,12 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void getKey_ReturnPublicKey() {
+    void getKey_ReturnPublicKeyResp() {
         RSAPublicKey key = mock(RSAPublicKey.class);
         when(jwtService.getPublicKey()).thenReturn(key);
 
-        RSAPublicKey result = registrationService.getKey();
+        PublicKeyResp result = registrationService.getKey();
 
-        assertEquals(key, result);
+        assertEquals(key, result.getPublicKey());
     }
 }

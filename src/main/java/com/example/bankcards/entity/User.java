@@ -1,56 +1,43 @@
 package com.example.bankcards.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.String;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Модель для User
+ */
 @Entity
+@Getter @Setter
+@Table(name = "users")
 public class User {
-
+    /** id пользователя */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    /** имя пользователя */
     @Column(name = "name")
     private String name;
+    /** login пользователя */
     @Column(name = "login", unique = true)
     private String login;
+    /** пароль пользователя */
     @Column(name = "password")
     private java.lang.String password;
+    /** роль пользователя, связь один к одному*/
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
-
+    /** карты пользователя, связ один ко многим*/
     @Column
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)//    @JoinTable(
     private Set<Card> cards = new HashSet<>();
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public java.lang.String getName() {
-        return name;
-    }
 
-    public void setName(java.lang.String name) {
-        this.name = name;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Set<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(Set<Card> cards) {
-        this.cards = cards;
-    }
 
 
     //
@@ -89,44 +76,27 @@ public class User {
 //        this.updatedAt = updatedAt;
 //    }
 
+    /**
+     * Конструктор без параметров
+     */
     public User(){}
 
-    public User(java.lang.String password) {
-        this(password,null,null);
-    }
-
-    public User(java.lang.String name, java.lang.String password, java.lang.String email){
+    /**
+     * Конструктор с параметрами:
+     * @param name имя пользователя
+     * @param password пароль пользователя
+     * @param login login пользователя
+     */
+    public User(String name, String password, String login){
         this.password = password;
         this.login = login;
 //        this.email = email;
 //        this.regAt = Date.from(ZonedDateTime.now().toInstant());
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public java.lang.String getLogin() {
-        return login;
-    }
 
-    public void setLogin(java.lang.String login) {
-        this.login = login;
-    }
 
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
 
-    public java.lang.String getPassword() {
-        return password;
-    }
 
-    public void setPassword(java.lang.String password) {
-        this.password = password;
-    }
 }

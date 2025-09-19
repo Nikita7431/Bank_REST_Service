@@ -2,6 +2,7 @@ package com.example.bankcards.service;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.bankcards.dto.request.UserDtoReque;
+import com.example.bankcards.dto.request.UserLoginDtoReque;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +19,7 @@ class JWTServiceTest {
 
     @Test
     void generateToken_User_returnsToken() throws Exception {
-        UserDtoReque user = new UserDtoReque("login", "password");
-        user.setId(4);
+        UserLoginDtoReque user = new UserLoginDtoReque("login", "password");
         String token = jwtService.generateAccessToken(user);
         assertNotNull(token);
         assertFalse(token.isBlank());
@@ -35,10 +35,9 @@ class JWTServiceTest {
 
     @Test
     void validateTokenAndSyncClaim_Token_ReturnUser() throws Exception {
-        UserDtoReque user = new UserDtoReque("login", "password");
-        user.setId(4);
+        UserLoginDtoReque user = new UserLoginDtoReque("login", "password");
         String token = jwtService.generateAccessToken(user);
-        UserDtoReque userDtoReque = jwtService.validateTokenAndSyncClaim(token);
+        UserLoginDtoReque userDtoReque = jwtService.validateTokenAndSyncClaim(token);
 
         assertNotNull(userDtoReque);
         assertEquals("login", userDtoReque.getLogin());
