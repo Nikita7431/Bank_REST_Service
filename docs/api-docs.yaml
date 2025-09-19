@@ -1,0 +1,511 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8084
+  description: Generated server url
+tags:
+- name: Cards
+  description: Операции с картами
+paths:
+  /cards/{cardId}:
+    put:
+      tags:
+      - Cards
+      summary: Обновление карты
+      description: Возвращает статус NO_CONTENT и пустой объект с полем id
+      operationId: updateCard
+      parameters:
+      - name: cardId
+        in: path
+        description: id карты
+        required: true
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardDtoReque"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardDtoIdResp"
+    delete:
+      tags:
+      - Cards
+      summary: Удаление карты
+      description: Возвращает статус NO_CONTENT и пустой объект с полем id
+      operationId: delCard
+      parameters:
+      - name: cardId
+        in: path
+        description: id карты
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardDtoIdResp"
+  /loginref:
+    post:
+      tags:
+      - auth-controller
+      summary: Обновление токенов по refresh токену
+      description: Возвращает ResponseTokens с токенами
+      operationId: loginByRefresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: refresh-jwt для обновления токенов
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseTokens"
+  /cards/{userId}:
+    post:
+      tags:
+      - Cards
+      summary: Создание карты
+      description: Возвращает id карты
+      operationId: createCard
+      parameters:
+      - name: userId
+        in: path
+        description: id пользователя
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardDtoIdResp"
+  /cards/{cardId}/{userid}:
+    post:
+      tags:
+      - Cards
+      summary: Блокировка карты
+      description: Возвращает статус NO_CONTENT
+      operationId: blockCard
+      parameters:
+      - name: cardId
+        in: path
+        description: id карты
+        required: true
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardDtoIdResp"
+  /auth/reg/user:
+    post:
+      tags:
+      - auth-controller
+      summary: Регистрация
+      description: Возвращает пустой ResponseTokens
+      operationId: regUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserDtoReque"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseTokens"
+  /auth/login:
+    post:
+      tags:
+      - auth-controller
+      summary: Аутентификация без токена
+      description: Возвращает ResponseTokens с refresh токеном и null в место acess
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLoginDtoReque"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseTokens"
+  /users/{userId}:
+    get:
+      tags:
+      - Cards
+      summary: Постраничное дозирование пользовательских карт
+      description: Возвращает страницу карт пользователя
+      operationId: getCards
+      parameters:
+      - name: userId
+        in: path
+        description: id пользователя
+        required: true
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+      - name: page
+        in: query
+        description: Номер страницы для пагинации
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        description: Размер страницы для пагинации
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageCardsDtoResp"
+  /key:
+    get:
+      tags:
+      - auth-controller
+      summary: Получение публичного ключа для проверки токена
+      description: Возвращает PublicKey
+      operationId: getKey
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PublicKeyResp"
+  /cards/transfer/{userId}:
+    get:
+      tags:
+      - Cards
+      summary: Перевод между картами пользователя
+      description: Возвращает статус 200 и пустой объект с полем id
+      operationId: transfer
+      parameters:
+      - name: userId
+        in: path
+        description: id пользователя
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: numberFirstCard
+        in: query
+        description: номер карты с которой переводят
+        required: true
+        schema:
+          type: string
+      - name: numberSecondCard
+        in: query
+        description: номер карты на которую переводят
+        required: true
+        schema:
+          type: string
+      - name: sum
+        in: query
+        description: размер переводимых средств
+        required: true
+        schema:
+          type: number
+          format: double
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CardDtoIdResp"
+  /admin/{adminId}:
+    get:
+      tags:
+      - admin-controller
+      summary: Получение администратором всех карт пользователей
+      description: Возвращает Page с картами
+      operationId: allCards
+      parameters:
+      - name: adminId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: page
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageCardDtoResp"
+  /admin/:
+    get:
+      tags:
+      - admin-controller
+      summary: Получение администратором всех пользователей и их карт
+      description: Возвращает List с картами
+      operationId: allUsersWithCards
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserDtoResp"
+  /dellogin:
+    delete:
+      tags:
+      - auth-controller
+      summary: Отзыв токена
+      description: Возвращает пустой ResponseTokens
+      operationId: delRefresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: refresh-jwt для отзыва токена
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResponseTokens"
+components:
+  schemas:
+    CardDtoReque:
+      type: object
+      description: данные карты
+      properties:
+        number:
+          type: string
+        status:
+          type: string
+      required:
+      - number
+      - status
+    CardDtoIdResp:
+      type: object
+      description: Dto с id карты пользователя
+      properties:
+        cardId:
+          type: integer
+          format: int32
+          description: id карты пользователя
+    ResponseTokens:
+      type: object
+      description: сущность для двух токенов
+      properties:
+        accessToken:
+          type: string
+          description: acess токен
+        refreshToken:
+          type: string
+          description: refresh токен
+    UserDtoReque:
+      type: object
+      description: "данные пользователя: логин и пароль"
+      properties:
+        name:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+      required:
+      - login
+      - name
+      - password
+    UserLoginDtoReque:
+      type: object
+      description: "данные пользователя: логин и пароль"
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+      required:
+      - login
+      - password
+    PageCardsDtoResp:
+      description: Сущность для Page из Card (Пагинация)
+    PublicKeyResp:
+      type: object
+      description: Сущность для PublicKey
+      properties:
+        publicKey:
+          type: object
+          description: PublicKey
+          properties:
+            params: {}
+            publicExponent:
+              type: integer
+            encoded:
+              type: string
+              format: byte
+            format:
+              type: string
+            algorithm:
+              type: string
+            modulus:
+              type: integer
+    CardDtoResp:
+      type: object
+      description: Сущность карты пользователя
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: id карты пользователя
+        number:
+          type: string
+          description: Номер карты пользователя
+        nameUser:
+          type: string
+          description: Имя пользователя
+        endDate:
+          type: string
+          format: date
+          description: Дата окончания службы карты пользователя
+        status:
+          type: string
+          description: Статус карты пользователя
+        balance:
+          type: number
+          format: double
+          description: Баланс карты пользователя
+    PageCardDtoResp:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/CardDtoResp"
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        first:
+          type: boolean
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        paged:
+          type: boolean
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+    UserDtoResp:
+      type: object
+      description: Сущность пользователя
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: id пользователя
+        name:
+          type: string
+          description: имя пользователя
+        role:
+          type: string
+          description: role пользователя
+        cards:
+          type: array
+          description: карты пользователя
+          items:
+            $ref: "#/components/schemas/CardDtoResp"
+          uniqueItems: true
